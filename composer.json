@@ -1,0 +1,19 @@
+{
+    "name": "berti/blog",
+    "authors": [
+        {
+            "name": "Mylène",
+            "email": "bertinmylene03@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "App\\": "App",
+            "Core\\": "Core"
+        }
+    },
+    "require": {
+        "composer/composer": "^2.0"
+    }
+    
+}
