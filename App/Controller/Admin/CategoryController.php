@@ -4,7 +4,7 @@ namespace App\Controller\Admin;
 
 use \Core\HTML\BootstrapForm;
 
-class CategoriesController extends AppController
+class CategoryController extends AppController
 {
     /**
      * Initialise les Models
@@ -24,7 +24,7 @@ class CategoriesController extends AppController
     {
         $categories = $this->category->all();
 
-        $this->render('admin.categories.index', compact('categories'));
+        $this->render('admin.category.index', compact('category'));
     }
 
     /**
@@ -41,7 +41,7 @@ class CategoriesController extends AppController
         if (!empty($_POST)) {
             $_POST['id'] = $_GET['id'];
 
-            $result = $this->category->update('UPDATE `categories` SET name=:name WHERE id=:id', $_POST);
+            $result = $this->category->update('UPDATE `category` SET name=:name WHERE id=:id', $_POST);
             
             if ($result) {
                 $success = true;
@@ -52,7 +52,7 @@ class CategoriesController extends AppController
 
         $this->form = new BootstrapForm($category);
 
-        $this->render('admin.categories.edit', compact('title', 'success', 'category'));
+        $this->render('admin.category.edit', compact('title', 'success', 'category'));
     }
 
     /**
@@ -65,14 +65,14 @@ class CategoriesController extends AppController
         $title = 'Ajouter une nouvelle catégorie';
 
         if (!empty($_POST)) {
-            $result = $this->category->update('INSERT INTO `categories`(`name`) VALUES (:name)', $_POST);
+            $result = $this->category->update('INSERT INTO `category`(`name`) VALUES (:name)', $_POST);
             
             if ($result) {
                 return $this->index();
             }
         }
 
-        $this->render('admin.categories.edit', compact('title'));
+        $this->render('admin.category.edit', compact('title'));
     }
 
     /**

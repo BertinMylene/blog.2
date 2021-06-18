@@ -9,5 +9,8 @@ use Core\Entity\Entity;
 */
 class CategoryEntity extends Entity
 {
-	
+    public function getUrl()
+    {
+        return 'index.php?p=category.show&id=' . $this->id;
+    }
 }

@@ -26,10 +26,14 @@ class Config
 	 * @return object Config Renvoie l'instance unique de Config
 	 */
 	public static function getInstance(string $files) {
-		if (self::$_instance === null) {
-			self::$_instance = new Config($files);
+		try {
+			if (self::$_instance === null) {
+				self::$_instance = new Config($files);
+			}
+			return self::$_instance;
+		} catch (\Exception $e) {
+			var_dump($e);
 		}
-		return self::$_instance;
 	}
 
 	/**
@@ -38,6 +42,10 @@ class Config
 	 * @return mixed Valeur du paramètre si la clé existe, sinon retourne null
 	 */
 	public function get(string $key) {
-		return (isset($this->settings[$key])) ? $this->settings[$key] : null ;
+		try {
+			return (isset($this->settings[$key])) ? $this->settings[$key] : null ;
+		} catch (\Exception $e) {
+			var_dump($e);
+		}
 	}
 }

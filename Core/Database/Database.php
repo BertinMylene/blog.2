@@ -1,5 +1,5 @@
 <?php
-namespace Core;
+namespace Core\Database;
 
 use \PDO;
 
@@ -22,17 +22,17 @@ class Database
 	private $host;
 
 	/** @var string $name Nom de la Table */
-	private $db = null;
+	private $database = null;
 
 	/**
 	 * Initialise les attributs avec les paramètres de connexion à la base de données
 	 * @param string $name nom de la DB
-	 * @param string $user (optional) nom d'utilisateur pour se connecter
+	 * @param string $user nom d'utilisateur pour se connecter
 	 * @param string $pass (optional) mot de passe pour se connecter
-	 * @param string $host (optional) nom du serveur
+	 * @param string $host nom du serveur
 	 * @return non
 	 */
-	public function __construct(string $name, string $user ='root', string $pass = '', string $host = 'localhost') {
+	public function __construct(string $name ='blog', string $user ='root', string $pass = '', string $host = 'localhost') {
 		$this->name = $name;
 		$this->user = $user;
 		$this->pass = $pass;
@@ -45,13 +45,18 @@ class Database
 	 * @param none
 	 * @return object PDO
 	 */
-	private function getPDO() {
-		if ($this->db === null) {
-			$db = new PDO('mysql:dbname=blog;host=localhost;charset=utf8', 'root', '');
-			$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-			$this->db = $db;
+	private function getPDO()
+	{
+		try {
+			if ($this->database === null) {
+				$pdo = new PDO('mysql:dbname=' . $this->name . ';host=' . $this->host, $this->user, $this->pass);
+				$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+				$this->database = $pdo;
+			}
+			return $this->database;
+		} catch (\Exception $e) {
+			var_dump($e);
 		}
-		return $this->db;
 	}
 
 	/**
@@ -64,19 +69,22 @@ class Database
 	 */
 	public function query(string $statement, string $className = null, bool $oneResult = false) {
 		$results = $this->getPDO()->query($statement);
+		try {
+			if ($className === null) {
+				$results->setFetchMode(PDO::FETCH_OBJ);
+			} else {
+				$results->setFetchMode(PDO::FETCH_CLASS, $className);
+			}
 
-		if ($className === null) {
-			$results->setFetchMode(PDO::FETCH_OBJ);
-		} else {
-			$results->setFetchMode(PDO::FETCH_CLASS, $className);
+			if ($oneResult) {
+				$datas = $results->fetch();
+			} else {
+				$datas = $results->fetchAll();
+			}
+			return $datas;
+		} catch (\Exception $e) {
+			var_dump($e);
 		}
-
-		if ($oneResult) {
-			$datas = $results->fetch();
-		} else {
-			$datas = $results->fetchAll();
-		}
-		return $datas;
 	}
 
 	/**
@@ -90,25 +98,28 @@ class Database
 	 */
 	public function prepare(string $statement, array $parameters, string $className = null, bool $oneResult = false, bool $noFetch = false) {
 		$prep = $this->getPDO()->prepare($statement);
+		try{
+			if (!$noFetch) {
+				$prep->execute($parameters);
 
-		if (!$noFetch) {
-			$prep->execute($parameters);
-
-			if ($className === null) {
-				$prep->setFetchMode(PDO::FETCH_OBJ);
-			} else {
-				$prep->setFetchMode(PDO::FETCH_CLASS, $className);
-			}
+				if ($className === null) {
+					$prep->setFetchMode(PDO::FETCH_OBJ);
+				} else {
+					$prep->setFetchMode(PDO::FETCH_CLASS, $className);
+				}
+				
+				if ($oneResult) {
+					$datas = $prep->fetch();
+				} else {
+					$datas = $prep->fetchAll();
+				}
+				return $datas;
 			
-			if ($oneResult) {
-				$datas = $prep->fetch();
-			} else {
-				$datas = $prep->fetchAll();
-			}
-			return $datas;
-			
-		} else {
-			return $prep->execute($parameters);
+				} else {
+					return $prep->execute($parameters);
+				}
+		} catch (\Exception $e) {
+			var_dump($e);
 		}
 	}
 
@@ -118,6 +129,6 @@ class Database
 	 **/
 	public function lastInsertId(string $tableName)
 	{
-		return $this->db->lastInsertId($tableName);
+		return $this->database->lastInsertId($tableName);
 	}
 }

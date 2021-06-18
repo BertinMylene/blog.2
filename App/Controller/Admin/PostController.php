@@ -3,18 +3,23 @@
 namespace App\Controller\Admin;
 
 use \Core\HTML\BootstrapForm;
+use App\Manager\PostManager;
 
-class PostsController extends AppController
+class PostController extends AppController
 {
+    private $postManager;
+
     /**
      * Initialise les Models
      **/
-    public function __construct()
+    public function __construct($request)
     {
-        parent::__construct();
+        parent::__construct($request);
 
         $this->loadModel('post');
         $this->loadModel('category');
+
+        $this->postManager=new PostManager($request);
     }
 
     /**
@@ -24,7 +29,7 @@ class PostsController extends AppController
     {
         $posts = $this->post->all();
 
-        $this->render('admin.posts.index', compact('posts'));
+        $this->render('admin.post.index', compact('post'));
     }
 
     /**
@@ -40,17 +45,16 @@ class PostsController extends AppController
         
         $categories = $this->category->all();
         
-        if (!empty($_POST)) {
-            $_POST['id'] = $_GET['id'];
+        if($this->request->hasPost()){
             
-            $result = $this->post->update('UPDATE `posts` SET title=:title, content=:content, category_id=:category_id WHERE id=:id', $_POST);
+            $result=$this->postManager->update($this->request->getGetValue('id'));
             
             if ($result) {
                 $success = true;
             }
         }
         
-        $post = $this->post->find($_GET['id']);
+        $post = $this->post->find($this->request->getGetValue('id'));
         
         $this->form = new BootstrapForm($post);
         
@@ -58,7 +62,7 @@ class PostsController extends AppController
             $this->error404();
         }
 
-        $this->render('admin.posts.edit', compact('title', 'categories', 'success', 'post'));
+        $this->render('admin.post.edit', compact('title', 'category', 'success', 'post'));
     }
 
     /**
@@ -73,14 +77,14 @@ class PostsController extends AppController
         $categories = $this->category->all();
 
         if (!empty($_POST)) {
-            $result = $this->post->update('INSERT INTO `posts`(`title`, `content`, `date`, `category_id`) VALUES (:title, :content, NOW(), :category_id)', $_POST);
+            $result = $this->post->update('INSERT INTO `post`(`title`, `content`, `date`, `category_id`) VALUES (:title, :content, NOW(), :category_id)', $_POST);
             
             if ($result) {
                 return $this->index();
             }
         }
 
-        $this->render('admin.posts.edit', compact('title', 'categories'));
+        $this->render('admin.post.edit', compact('title', 'category'));
     }
 
     /**

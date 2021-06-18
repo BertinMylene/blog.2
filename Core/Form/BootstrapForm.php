@@ -1,5 +1,5 @@
 <?php 
-namespace Core\HTML;
+namespace Core\Form;
 
 class BootstrapForm extends Form
 {

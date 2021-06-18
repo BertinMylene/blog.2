@@ -5,7 +5,7 @@ namespace App\Controller;
 use \Core\Auth\DBAuth;
 use \Core\HTML\BootstrapForm;
 
-class UsersController extends AppController
+class UserController extends AppController
 {
     /**
      * Permet l'authentification de l'utilisateur
@@ -18,11 +18,11 @@ class UsersController extends AppController
             $auth = new DBAuth($this->app->getDb());
             
             if ($auth->login($_POST['pseudo'], $_POST['mdp'])) {
-                header('Location: index.php?p=admin.posts.index');
+                header('Location: index.php?p=admin.post.index');
             } else {
                 $error = true;
             }
         }
-        $this->render('users.login', compact('error'));
+        $this->render('user.login', compact('error'));
     }
 }

@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use \App;
-use \Core\HTML\BootstrapForm;
+use \Core\Form\BootstrapForm;
 
 class AppController extends \Core\Controller\Controller
 {
@@ -16,8 +16,10 @@ class AppController extends \Core\Controller\Controller
     /**
      * Initialise les variables pour cette application
      **/
-    public function __construct()
+    public function __construct($request)
     {
+        parent::__construct($request);
+
         $this->template = 'default';
 
         $this->viewPath = ROOT . '/app/Views/';

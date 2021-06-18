@@ -2,14 +2,15 @@
 
 namespace App\Controller;
 
-class PostsController extends AppController
+class PostController extends AppController
 {
+    protected $request;
     /**
      * Initialise les Models qu'on charge dans ce controller
      **/
-    public function __construct()
+    public function __construct($request)
     {
-        parent::__construct();
+        parent::__construct($request);
 
         $this->loadModel('post');
         $this->loadModel('category');
@@ -25,8 +26,8 @@ class PostsController extends AppController
         $allCategories = $this->category->all();
 
         $lastPosts = $this->post->getLastPosts();
-
-        $this->render('posts.index', compact('lastPosts', 'allCategories'));
+        //var_dump($lastPosts);
+        $this->render('post.index', compact('lastPosts', 'allCategories'));
     }
 
     /**
@@ -44,7 +45,7 @@ class PostsController extends AppController
         
         $this->app->setTitle($post->title);
 
-        $this->render('posts.single', compact('post', 'category'));
+        $this->render('post.single', compact('post', 'category'));
     }
 
     /**
@@ -62,6 +63,6 @@ class PostsController extends AppController
         
         $this->app->setTitle($postsByCategory[0]->category);
 
-        $this->render('posts.category', compact('allCategories', 'postsByCategory'));
+        $this->render('post.category', compact('allCategories', 'postsByCategory'));
     }
 }
