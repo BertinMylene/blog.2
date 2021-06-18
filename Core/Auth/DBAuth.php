@@ -1,25 +1,28 @@
 <?php
+
 namespace Core\Auth;
 
-use Core\Database;
+use Core\Database\Database;
 
 /**
  * Gère l'authentifiaction par extraction des Users de la DB
  */
-class DBAuth{
+class DBAuth
+{
 
     /**
      * @var Objet \PDO $db Connection à la DB
      */
-    protected $db;
+    protected $database;
 
-    
+
     /**
      * Initialise la connexion à la DB (par injection de dépendance)
-     * @param Database $db
+     * @param Database $database
      */
-    public function __construct(Database $db){
-        $this->db = $db;
+    public function __construct(Database $database)
+    {
+        $this->database = $database;
     }
 
     /**
@@ -29,43 +32,61 @@ class DBAuth{
      * 
      * @return bool Selon si l'User peut se connecter ou non
      */
-    public function login(string $pseudo, string $password){
-        $user = $this->db->prepare('SELECT * FROM users WHERE pseudo = ?', array($pseudo), null, true);
-        
-        if($user){
-            if($user->password === sha1($password)){
-                $_SESSION['auth'] = $user->id;
-                return true;
+    public function login(string $pseudo, string $password)
+    {
+        $user = $this->database->prepare('SELECT * FROM users WHERE pseudo = ?', array($pseudo), null, true);
+        try {
+            if ($user) {
+                if ($user->password === sha1($password)) {
+                    $session['auth'] = $user->id;
+                    return true;
+                }
             }
+            return false;
+        } catch (\Exception $e) {
+            var_dump($e);
         }
-        return false;
     }
 
     /**
      * Retourne l'ID de l'utilisateur s'in est connecté
      * @return string ID de l'utilisateur
      */
-    public function getUserId(){
-        if($this->logged()){
-            return $_SESSION['auth'];  
+    public function getUserId($session)
+    {
+        try {
+            if ($this->logged()) {
+                return $session['auth'];
+            }
+            return false;
+        } catch (\Exception $e) {
+            var_dump($e);
         }
-        return false;
     }
 
     /**
-     * Vérifie dans le $_SESSION si l'utilisateur est déjà connecté
+     * Vérifie dans le $session si l'utilisateur est déjà connecté
      * @return bool
      */
-    public function logged(){
-            return isset($_SESSION['auth']);
+    public function logged()
+    {
+        try {
+            return isset($session['auth']);
+        } catch (\Exception $e) {
+            var_dump($e);
         }
-
+    }
     /**
      * Déconnecte l'User
      */
-    public function disconnect(){
-        if($this->logged()){
-            unset($_SESSION['auth']);
+    public function disconnect()
+    {
+        try {
+            if ($this->logged()) {
+                unset($session['auth']);
+            }
+        } catch (\Exception $e) {
+            var_dump($e);
         }
     }
 }

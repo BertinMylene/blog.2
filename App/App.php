@@ -1,6 +1,6 @@
 <?php
 
-use Core\Database;
+use Core\Database\Database;
 use Core\Config;
 
 /**
@@ -17,7 +17,7 @@ class App{
 	 * Instancie une nouvelle connection à la bdd
 	 */
 	protected function __construct() {
-		$config = $this->config = Config::getInstance(ROOT . '/Config/config.php');
+		$this->config = Config::getInstance(ROOT . '/Config/config.php');
 	}
 
     /**

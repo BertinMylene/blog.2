@@ -16,10 +16,10 @@ class PostTable extends Table
 	 */
 	public function getLastPosts() {
 		return $this->query('
-			SELECT posts.id, posts.title, posts.content, posts.date, categories.name as category
-			FROM posts
-			LEFT JOIN categories ON category_id = categories.id
-			ORDER BY posts.date DESC
+			SELECT p.id, p.title, p.content, p.created_at, c.name as category
+			FROM post p
+			LEFT JOIN category c ON p.category_id = c.id
+			ORDER BY p.created_at DESC
 			');
 	}
 
@@ -30,11 +30,11 @@ class PostTable extends Table
 	 */
 	public function getPostsByCategory(string $id) {
 		return $this->query('
-			SELECT posts.id, posts.title, posts.content, posts.date, categories.name as category
-			FROM posts
-			LEFT JOIN categories ON category_id = categories.id
-			WHERE category_id=?
-			ORDER BY posts.date DESC
+			SELECT p.id, p.title, p.content, p.created_at, c.name as category
+			FROM post p
+			LEFT JOIN category c ON p.category_id = c.id
+			WHERE p.category_id=?
+			ORDER BY p.created_at DESC
 			', array($id));
 	}
 }
