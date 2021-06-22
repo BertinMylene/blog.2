@@ -21,13 +21,12 @@ class CategoryController extends AppController
 
     /**
      * Afficher les articles de La categorie sélectionnée
-     * public function category() dans App\Controller\PostController.php
      */
-    public function CategoryPosts()
+    public function list()
     {
-        $postsByCategory = $this->post->getPostsByCategory($this->_get);
+        $postsByCategory = $this->post->getPostsByCategory($this->request->getGetValue("id"));
 
-        $this->render('category.post', compact('category'));
+        $this->render('category.post');
     }
 
 }

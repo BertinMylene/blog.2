@@ -29,7 +29,7 @@ abstract class Controller
     }
 
     /**
-     * returns the code to send to the browser during the timeout
+     * renvoie le code à envoyer au navigateur pendant le timeout
      * @param string $nameView
      * @param array $variables
      */

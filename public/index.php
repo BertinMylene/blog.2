@@ -1,7 +1,6 @@
 <?php
 
 use Core\Http\Request;
-use App\Controller\Admin\CategoryController;
 
 define('ROOT', dirname(__DIR__));
 
