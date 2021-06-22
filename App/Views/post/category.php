@@ -2,7 +2,7 @@
 
 <div class="row">
 	<ul class="col-sm-8">
-		<?php foreach($postsByCategory as $post): ?>
+		<?php foreach ($postsByCategory as $post) : ?>
 
 			<h2><?= $post->title; ?></h2>
 
@@ -17,9 +17,9 @@
 
 	<ul class="col-sm-4">
 		<?php
-		foreach($allCategories as $category):
+		foreach ($allCategories as $category) :
 		?>
-		<li><a href="<?= $category->url; ?>"><?= $category->name; ?></a></li>
+			<li><a href="<?= $category->url; ?>"><?= $category->name; ?></a></li>
 		<?php
 		endforeach;
 		?>

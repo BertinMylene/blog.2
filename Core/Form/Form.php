@@ -3,20 +3,18 @@
 namespace Core\Form;
 
 /**
- * Permet la création et l'affichage d'un formulaire en HTML
+ * Creation and display of a form in HTML
  */
 class Form
 {
 	/** 
-	 * @var array $data Tableau de données pour récupérer les éléments en POST et les mettre dans les formulaires 
+	 * @var array $data Retrieve the elements in POST
 	 */
 	protected $data;
 
-
 	/**
-	 * Initialise les données en Post quand elles existent
-	 * @param array $datas Données reçues en $_POST
-	 * @return none
+	 * Data initialization in Post
+	 * @param array $post
 	 */
 	public function __construct($post = [])
 	{
@@ -24,7 +22,7 @@ class Form
 	}
 
 	/**
-	 * Prépare les différentes options pour les champs
+	 * Prepare options for fields
 	 * @param string $name
 	 * @param string|null $label
 	 * @param array $options

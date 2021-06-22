@@ -21,6 +21,17 @@ class Request
     }
 
     /**
+     * y a t il des valeurs dans cette clé ?
+     * @param mixed $key
+     * 
+     * @return bool
+     */
+    public function hasGetValue($key): bool
+    {
+        return isset($this->_get[$key]);
+    }
+
+    /**
      * Obtenir les valeurs de la clé passé en parametre.
      * @param mixed $key string 
      * 
@@ -29,6 +40,17 @@ class Request
     public function getGetValue($key)
     {
         return isset($this->_get[$key]) ? $this->_get[$key] : null;
+    }
+
+
+
+    /**
+     * Existe t il ce post ?
+     * @return [type]
+     */
+    public function hasPost()
+    {
+        return !empty($this->_post);
     }
 
     /**
@@ -42,23 +64,32 @@ class Request
         return isset($this->_post[$key]) ? $this->_post[$key] : null;
     }
 
-    /**
-     * Existe t il ce post ?
-     * @return [type]
-     */
-    public function hasPost()
-    {
-        return !empty($this->_post);
-    }
+    
 
     /**
-     * y a t il des valeurs dans cette clé ?
+     * presente d'une key dans la session?
      * @param mixed $key
      * 
      * @return bool
      */
-    public function hasGetValue($key): bool
+    public function hasSessionValue($key): bool
     {
-        return isset($this->_get[$key]);
+        return isset($this->_session[$key]);
+    }
+
+    public function getSessionValue($key)
+    {
+        return isset($this->_session[$key]) ? $this->_session[$key] : null;
+    }
+
+    public function setSessionValue($key, $value)
+    {
+        $this->_session[$key]=$value;
+
+    }
+
+    public function unsetSessionValue($key)
+    {
+        unset($this->_session[$key]);
     }
 }

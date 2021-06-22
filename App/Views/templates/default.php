@@ -17,9 +17,9 @@
 	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
 		<div class="container-fluid">
 			<ul class="nav navbar-nav">
-				<li class="nav-link active"><a class="navbar-brand" href="index.php?p=posts.index">Accueil <span class="sr-only"></span></a></li>
-				<li class="nav-link"><a class="navbar-brand" href="index.php?p=admin.posts.index">Admin Posts</a></li>
-				<li class="nav-link"><a class="navbar-brand" href="index.php?p=admin.categories.index">Admin Categories</a></li>
+				<li class="nav-link active"><a class="navbar-brand" href="index.php?p=post.index">Accueil <span class="sr-only"></span></a></li>
+				<li class="nav-link"><a class="navbar-brand" href="index.php?p=admin.post.index">Admin Posts</a></li>
+				<li class="nav-link"><a class="navbar-brand" href="index.php?p=admin.category.index">Admin Categories</a></li>
 			</ul>
 		</div>
 	</nav>

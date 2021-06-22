@@ -1,6 +1,9 @@
 <?php 
 namespace Core\Form;
 
+/**
+ * [Description BootstrapForm]
+ */
 class BootstrapForm extends Form
 {
     /**

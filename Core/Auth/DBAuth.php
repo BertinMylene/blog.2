@@ -2,35 +2,41 @@
 
 namespace Core\Auth;
 
+use Core\Http\Request;
 use Core\Database\Database;
 
 /**
- * Gère l'authentifiaction par extraction des Users de la DB
+ * Manage authentication
  */
 class DBAuth
 {
 
+    
     /**
-     * @var Objet \PDO $db Connection à la DB
+     * Database connection
+     * @var 
      */
     protected $database;
+    private $request;
+    private const KEY_AUTH='auth';
 
 
     /**
-     * Initialise la connexion à la DB (par injection de dépendance)
-     * @param Database $database
+     * Database initialization
+     * @param Database $database 
      */
-    public function __construct(Database $database)
+    public function __construct(Database $database, Request $request)
     {
         $this->database = $database;
+        $this->request = $request;
     }
-
+ 
     /**
-     * Permet aux User de se connecter
-     * @param string $peudo
+     * User connection
+     * @param string $pseudo
      * @param string $password
      * 
-     * @return bool Selon si l'User peut se connecter ou non
+     * @return bool 
      */
     public function login(string $pseudo, string $password)
     {
@@ -38,7 +44,7 @@ class DBAuth
         try {
             if ($user) {
                 if ($user->password === sha1($password)) {
-                    $session['auth'] = $user->id;
+                    $this->request->setSessionValue(self::KEY_AUTH, $user->id);
                     return true;
                 }
             }
@@ -49,14 +55,29 @@ class DBAuth
     }
 
     /**
-     * Retourne l'ID de l'utilisateur s'in est connecté
-     * @return string ID de l'utilisateur
+     * Check if the user is logged in
+     * @return bool
      */
-    public function getUserId($session)
+    public function logged()
+    {
+        try {
+            return $this->request->hasSessionValue(self::KEY_AUTH);
+        } catch (\Exception $e) {
+            var_dump($e);
+        }
+    }
+
+    /**
+     * return user id if logged in
+     * @param mixed $session
+     * 
+     * @return bool
+     */
+    public function getUserId()
     {
         try {
             if ($this->logged()) {
-                return $session['auth'];
+                return $this->request->getSessionValue(self::KEY_AUTH);
             }
             return false;
         } catch (\Exception $e) {
@@ -65,25 +86,14 @@ class DBAuth
     }
 
     /**
-     * Vérifie dans le $session si l'utilisateur est déjà connecté
-     * @return bool
-     */
-    public function logged()
-    {
-        try {
-            return isset($session['auth']);
-        } catch (\Exception $e) {
-            var_dump($e);
-        }
-    }
-    /**
-     * Déconnecte l'User
+     * Disconnects the user
+     * @return [type]
      */
     public function disconnect()
     {
         try {
             if ($this->logged()) {
-                unset($session['auth']);
+                $this->request->unsetSessionValue(self::KEY_AUTH);
             }
         } catch (\Exception $e) {
             var_dump($e);

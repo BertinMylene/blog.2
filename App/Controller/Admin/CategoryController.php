@@ -2,7 +2,7 @@
 
 namespace App\Controller\Admin;
 
-use \Core\HTML\BootstrapForm;
+use \Core\Form\BootstrapForm;
 
 class CategoryController extends AppController
 {

@@ -1,38 +1,53 @@
 <?php
+
 namespace Core\Database;
 
 use \PDO;
 
 /**
- * Se connecte à la base de donnée grâce au système PDO 
- * @package app
+ * Connection to the database
  */
 class Database
 {
-	/** @var string $name Nom de la DB */
+	/**
+	 * Name of the data base
+	 * @var $name
+	 */
 	private $name;
 
-	/** @var string $name Nom d'utilisateur pour se connecter à DB */	
+	/** 
+	 * Database user name
+	 * @var string $user 
+	 */
 	private $user;
-	
-	/** @var string $name Password pour se connecter à la DB */	
+
+	/**
+	 * User password for the database
+	 * @var string $pass
+	 */
 	private $pass;
 
-	/** @var string $name Nom du serveur où se trouve la DB */
+	/**
+	 * Server name for database 
+	 * @var string $host
+	 */
 	private $host;
 
-	/** @var string $name Nom de la Table */
+	/**
+     * Database connection
+     * @var 
+     */
 	private $database = null;
 
 	/**
-	 * Initialise les attributs avec les paramètres de connexion à la base de données
-	 * @param string $name nom de la DB
-	 * @param string $user nom d'utilisateur pour se connecter
-	 * @param string $pass (optional) mot de passe pour se connecter
-	 * @param string $host nom du serveur
-	 * @return non
+	 * Initializes attributes with database connection parameters
+	 * @param string $name 
+	 * @param string $user 
+	 * @param string $pass (optional)
+	 * @param string $host
 	 */
-	public function __construct(string $name ='blog', string $user ='root', string $pass = '', string $host = 'localhost') {
+	public function __construct(string $name = 'blog', string $user = 'root', string $pass = '', string $host = 'localhost')
+	{
 		$this->name = $name;
 		$this->user = $user;
 		$this->pass = $pass;
@@ -40,10 +55,9 @@ class Database
 	}
 
 	/**
-	 * Initialisation d'une instance de PDO qui sera stockée dans l'attribut prévu s'il n'existe pas encore et le retourne
-	 * @access private
-	 * @param none
-	 * @return object PDO
+	 * Check if a PDO instance exists
+	 * Initialize a PDO instance and store it in the attribute
+	 * @return PDO
 	 */
 	private function getPDO()
 	{
@@ -59,15 +73,15 @@ class Database
 		}
 	}
 
-	/**
-	 * Fait une requête SQL qu'elle reçoit en paramètre
-	 * @access public
-	 * @param string $statement requête SQL
-	 * @param string $className classe de retour pour la récupération des données
-	 * @param bool $oneResult (optional) indique si on souhaite récupérer un élément et on fait un fetch ou plusieurs et on fait un fetchAll
-	 * @return object $className objet retourné selon celui passé en paramètre
+	/** Executes the request it receives
+	 * @param string $statement Request SQL
+	 * @param string|null $className Return class for data recovery
+	 * @param bool $oneResult (optional) 	Retrieve an item -> fetch
+	 * 										Recover multiple items -> fetchAll
+	 * @return [type]
 	 */
-	public function query(string $statement, string $className = null, bool $oneResult = false) {
+	public function query(string $statement, string $className = null, bool $oneResult = false)
+	{
 		$results = $this->getPDO()->query($statement);
 		try {
 			if ($className === null) {
@@ -88,17 +102,19 @@ class Database
 	}
 
 	/**
-	 * Fait une requête SQL préparée qu'elle reçoit en paramètre
-	 * @access public
-	 * @param string $statement requête SQL
-	 * @param array $parameters paramètre à ajouter dans la requête SQL
-	 * @param string $className classe de retour pour la récupération des données
-	 * @param bool $oneResult (optional) indique si on souhaite récupérer un élément et on fait un fetch ou plusieurs et on fait un fetchAll
-	 * @return object $className objet retourné selon celui passé en paramètre
+	 * Executes the prepared query it receives
+	 * @param string $statement Request SQL
+	 * @param array $parameters Parameters to add in the SQL query
+	 * @param string|null $className Return class for data recovery
+	 * @param bool $oneResult (optional) 	Retrieve an item -> fetch
+	 * 										Recover multiple items -> fetchAll
+	 * @param bool $noFetch If no data is recovered
+	 * @return [type]
 	 */
-	public function prepare(string $statement, array $parameters, string $className = null, bool $oneResult = false, bool $noFetch = false) {
+	public function prepare(string $statement, array $parameters, string $className = null, bool $oneResult = false, bool $noFetch = false)
+	{
 		$prep = $this->getPDO()->prepare($statement);
-		try{
+		try {
 			if (!$noFetch) {
 				$prep->execute($parameters);
 
@@ -107,26 +123,26 @@ class Database
 				} else {
 					$prep->setFetchMode(PDO::FETCH_CLASS, $className);
 				}
-				
+
 				if ($oneResult) {
 					$datas = $prep->fetch();
 				} else {
 					$datas = $prep->fetchAll();
 				}
 				return $datas;
-			
-				} else {
-					return $prep->execute($parameters);
-				}
+			} else {
+				return $prep->execute($parameters);
+			}
 		} catch (\Exception $e) {
 			var_dump($e);
 		}
 	}
-
+	
 	/**
-	 * Récupère l'ID du dernier élément envoyé à la DB
-	 * @return string ID du dernier élément
-	 **/
+	 * Retrieve the ID of the last item sent to the database
+	 * @param string $tableName id table
+	 * @return string id of last item
+	 */
 	public function lastInsertId(string $tableName)
 	{
 		return $this->database->lastInsertId($tableName);

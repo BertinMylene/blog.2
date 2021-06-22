@@ -36,7 +36,8 @@ class App{
 	 * Charge l'Autoloader afin de gérer le reste des Classes et lance une session
 	 */
 	public static function load() {
-		session_start();
+		
+		//$this->_session = isset($session) ? $session : null;
 	}
 
     /**
@@ -56,7 +57,10 @@ class App{
 	 */
 	public function getDb() {
 		if ($this->dbInstance === null) {
-			$this->dbInstance = new Database($this->config->get('db_name'), $this->config->get('db_user'), $this->config->get('db_pass'), $this->config->get('db_host'));
+			$this->dbInstance = new Database($this->config->get('db_name'), 
+											 $this->config->get('db_user'), 
+											 $this->config->get('db_pass'), 
+											 $this->config->get('db_host'));
 		}
 		return $this->dbInstance;
 	}

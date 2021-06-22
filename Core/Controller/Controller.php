@@ -2,25 +2,37 @@
 
 namespace Core\Controller;
 
+/**
+ * Receives user data
+ * Transmit view
+ */
 abstract class Controller
 {
     /**
-     * @var string $viewPath Chemin par défaut des vues
+     * Default path for views
+     * @var string
      */
     protected $viewPath;
     /**
-     * @var string $template Nom du template à charger
+     * Template to load
+     * @var
      */
     protected $template;
 
-    protected $request;
-
+    /**
+     * initializes the parameters of the request class
+     * @param mixed $request
+     */
     public function __construct($request)
     {
         $this->request = $request;
-
     }
 
+    /**
+     * returns the code to send to the browser during the timeout
+     * @param string $nameView
+     * @param array $variables
+     */
     protected function render(string $nameView, array $variables = [])
     {
         try {
@@ -35,8 +47,8 @@ abstract class Controller
     }
 
     /**
-     * Permet de renvoyer sur une page 404
-     * @return [type]
+     * 404 error
+     * return index.php
      */
     protected function error404()
     {
@@ -45,8 +57,7 @@ abstract class Controller
     }
 
     /**
-     * Permet l'accès à la page quand le User n'est pas Auth
-     * @return [type]
+     * Denies access to the user area
      */
     protected function forbidden()
     {
